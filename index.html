@@ -43,7 +43,20 @@
     <br>
     <pre style="font-size:20px;" id="ph">Currently in peak hours: N/A</pre>
 </div>
-
+<br><br>
+<div class="stats" id="players">
+    <h2 style="font-size:28px;">Player Disribution (Java vs Bedrock)</h2>
+    <hr>
+    <h2>Java</h2>
+    <pre style="font-size:20px;" id="jeserver">In Server: 0</pre>
+    <pre style="font-size:20px;" id="jelobby">In Lobby: 0</pre>
+    <pre style="font-size:20px;" id="je">Total: 0 </pre>
+    <br>
+    <h2>Bedrock</h2>
+    <pre style="font-size:20px;" id="beserver">In Server: 0</pre>
+    <pre style="font-size:20px;" id="belobby">In Lobby: 0</pre>
+    <pre style="font-size:20px;" id="be">Total: 0</pre>
+</div>
    <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -55,6 +68,22 @@ mdata = {"players":[],"servers":[],"ram":[],"dates":[]};
 	
 
         /* Get data from API */
+        function returnPlayerStats() {
+    var tmp = null;
+    $.ajax({
+        'async': false,
+        'type': "GET",
+        'timeout': 9999,
+        'global': false,
+        'dataType': 'json',
+        'url': "https://api.minehut.com/network/players/distribution",
+        'cache': false,
+        'success': function (data) {
+            tmp = data;
+        }
+    });
+    return tmp;
+};
         function returnStats() {
     var tmp = null;
     $.ajax({
@@ -71,6 +100,7 @@ mdata = {"players":[],"servers":[],"ram":[],"dates":[]};
     });
     return tmp;
 };
+let jd = returnStats();
 const ctx = document.getElementById('graph');
 cc = new Chart(ctx, {
     type: 'line',
@@ -78,17 +108,17 @@ cc = new Chart(ctx, {
         labels: mdata.dates,
         datasets: [
           {
-            label:["Hundred Servers"],
+            label:["Server Count"],
             data: mdata.servers,
            
           },
           {
-            label:["TB of RAM"],
+            label:["GB of RAM"],
             data: mdata.ram,
            
           },
           {
-            label:["Thousand Players"],
+            label:["Players / 2"],
             data: mdata.players,
            
           }
@@ -100,13 +130,28 @@ cc = new Chart(ctx, {
     }
   }); 
   cc.options.elements.line.tension = 0.4;
-        
-  
+       
+ 
 /* Update Counters */
-function update() {
+function playerupdate() {
+    dist = returnPlayerStats()
+    let bedrock = dist.bedrockTotal
+    let java = dist.javaTotal
+    let jelobby = dist.javaLobby
+    let belobby = dist.bedrockLobby
+    let jesrv = dist.javaPlayerServer
+    let besrv = dist.bedrockPlayerServer
+    document.getElementById('je').innerText = `Total: ${java}`;
+    document.getElementById('be').innerText = `Total: ${bedrock}`;
+    document.getElementById('jelobby').innerText = `In Lobby: ${jelobby}`;
+    document.getElementById('belobby').innerText = `In Lobby: ${belobby}`;
+    document.getElementById('jeserver').innerText = `In Server: ${jesrv}`;
+    document.getElementById('beserver').innerText = `In Server: ${besrv}`;
+}
+function statupdate() {
     
-    let jd = returnStats();
-console.log(jd);
+    jd = returnStats();
+
     let servers = jd.server_count;
 let servermax = jd.server_max;
 let plr = jd.player_count;
@@ -120,22 +165,24 @@ document.getElementById('mem').innerText = `RAM: N/A`;} else {
 document.getElementById('plr').innerText = `Players: ${plr}`;
 document.getElementById('mem').innerText = `RAM: ${ram}GB/${rammax}GB (${Math.floor((ram/rammax)*100)}%)`;}
 document.getElementById('date').innerText = `Date Pinged: ${date}`;
-mdata.servers.push(servers/100)
-mdata.players.push(plr/1000)
-mdata.ram.push(ram/1024)
+mdata.servers.push(servers)
+mdata.players.push(plr/2.25)
+mdata.ram.push(ram/1.545)
 mdata.dates.push(" ")
 
-cc.data.datasets[0].data = mdata.servers 
-cc.data.datasets[1].data = mdata.ram
-cc.data.datasets[2].data = mdata.players
+
+cc.data.datasets[0].data = mdata.servers ;
+cc.data.datasets[1].data = mdata.ram;
+cc.data.datasets[2].data = mdata.players;
 cc.update()
 }
 
 
 
-update()
-
-setInterval(function() {update(); console.log(mdata);},5000)
+statupdate();
+playerupdate();
+setInterval(function() {statupdate(); console.log(mdata);},5000)
+setInterval(function() {playerupdate(); console.log(mdata);},15000)
 setInterval(function() {
     let date = new Date().toLocaleString("en-US", { timeZone: "America/New_York" });
     
