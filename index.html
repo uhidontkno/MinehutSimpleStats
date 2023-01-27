@@ -195,11 +195,11 @@ cc.update()
 
 pd = returnPastData()
       console.log(pd.date)
-for (let i = 0; i > pd.date.length; i++) {
-  mdata.servers.push(pd.servers)
-mdata.players.push(pd.players)  
-mdata.ram.push(pd.ram) 
-mdata.dates.push(pd.date)
+for (let i = 0; i < pd.date.length; i++) {
+  mdata.servers.push(pd.servers[i])
+mdata.players.push(pd.players[i])  
+mdata.ram.push(pd.ram[i]/1024) 
+mdata.dates.push(pd.date[i])
 }
 
 
