@@ -68,6 +68,22 @@ mdata = {"players":[],"servers":[],"ram":[],"dates":[]};
 	
 
         /* Get data from API */
+      function returnPastData() {
+    var tmp = null;
+    $.ajax({
+        'async': false,
+        'type': "GET",
+        'timeout': 9999,
+        'global': false,
+        'dataType': 'json',
+        'url': "https://mhss-server.uhidontkno.repl.co/getdata",
+        'cache': false,
+        'success': function (data) {
+            tmp = data;
+        }
+    });
+    return tmp;
+};
         function returnPlayerStats() {
     var tmp = null;
     $.ajax({
@@ -177,6 +193,14 @@ cc.data.datasets[2].data = mdata.players;
 cc.update()
 }
 
+pd = returnPastData()
+      console.log(pd.date)
+for (let i = 0; i > pd.date.length; i++) {
+  mdata.servers.push(pd.servers)
+mdata.players.push(pd.players)  
+mdata.ram.push(pd.ram) 
+mdata.dates.push(pd.date)
+}
 
 
 statupdate();
@@ -195,6 +219,7 @@ setInterval(function() {
         document.getElementById("ph").innerText = "Currently in peak hours: no"
     }
 },1000)
+
     </script>
      <!-- CSS -->
 
