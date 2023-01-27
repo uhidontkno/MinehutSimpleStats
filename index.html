@@ -195,7 +195,7 @@ cc.update()
 
 pd = returnPastData()
       console.log(pd.date)
-for (let i = 0; i < pd.date.length; i++) {
+for (let i = pd.date.length; i < 1 ; i--) {
   mdata.servers.push(pd.servers[i])
 mdata.players.push(pd.players[i]/2.25)  
 mdata.ram.push((pd.ram[i]/1024)/1.545) 
