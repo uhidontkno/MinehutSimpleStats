@@ -1,24 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-   
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
 </head>
+
 <body>
-<div class="header">
-    
+  <div class="header">
+
     <span style="font-size:26px;font-weight:bolder;">Minehut SimpleStats</span>
     <div class="header-buttons">
-        <a href="#top" class="hov-green">Data</a>
-        <a href="#analysis" class="hov-blue">Analysis</a>
+      <a href="#top" class="hov-green">Data</a>
+      <a href="specifics.html" class="hov-green">Server Specifics</a>
+      <a href="#analysis" class="hov-blue">Analysis</a>
     </div>
-</div>
-<br><br><br>
-<span id="top"></span>
-<div class="stats">
+  </div>
+  <br><br><br>
+  <span id="top"></span>
+  <div class="stats">
     <h2 style="font-size:28px;">Statistics:</h2>
     <hr>
     <pre style="font-size:32px;font-weight:bolder;margin:4px;" id="srv">Servers: 0/0</pre>
@@ -26,8 +29,8 @@
     <pre style="font-size:32px;font-weight:bolder;margin:4px;" id="mem">RAM: 0GB/0GB</pre>
     <pre id="date">Time Pinged: 0000-00-00T00:00:00.000Z</pre>
     <canvas class="graph" id="graph" width="360" height="200"></canvas>
-</div><br><br>
-<div class="stats" id="analysis">
+  </div><br><br>
+  <div class="stats" id="analysis">
     <h2 style="font-size:28px;">Common Patterns (times in EST):</h2>
     <pre id="est">Time in EST: 00:00:00 AM</pre>
     <hr>
@@ -42,9 +45,9 @@
     <pre style="font-size:20px;">Full Capacity Hours: none</pre>
     <br>
     <pre style="font-size:20px;" id="ph">Currently in peak hours: N/A</pre>
-</div>
-<br><br>
-<div class="stats" id="players">
+  </div>
+  <br><br>
+  <div class="stats" id="players">
     <h2 style="font-size:28px;">Player Disribution (Java vs Bedrock)</h2>
     <hr>
     <h2>Java</h2>
@@ -56,21 +59,21 @@
     <pre style="font-size:20px;" id="beserver">In Server: 0</pre>
     <pre style="font-size:20px;" id="belobby">In Lobby: 0</pre>
     <pre style="font-size:20px;" id="be">Total: 0</pre>
-</div>
-   <!-- JS -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-mdata = {"players":[],"servers":[],"ram":[],"dates":[]};
+  </div>
+  <!-- JS -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    mdata = {"players": [], "servers": [], "ram": [], "dates": []};
 
-		//{name: 'Servers', points: sc},
-		//{name: 'Players', points: plr}
-	
+    //{name: 'Servers', points: sc},
+    //{name: 'Players', points: plr}
 
-        /* Get data from API */
-      function returnPastData() {
-    var tmp = null;
-    $.ajax({
+
+    /* Get data from API */
+    function returnPastData() {
+      var tmp = null;
+      $.ajax({
         'async': false,
         'type': "GET",
         'timeout': 9999,
@@ -79,14 +82,14 @@ mdata = {"players":[],"servers":[],"ram":[],"dates":[]};
         'url': "https://mhss-server.uhidontkno.repl.co/getdata",
         'cache': false,
         'success': function (data) {
-            tmp = data;
+          tmp = data;
         }
-    });
-    return tmp;
-};
-        function returnPlayerStats() {
-    var tmp = null;
-    $.ajax({
+      });
+      return tmp;
+    };
+    function returnPlayerStats() {
+      var tmp = null;
+      $.ajax({
         'async': false,
         'type': "GET",
         'timeout': 9999,
@@ -95,14 +98,14 @@ mdata = {"players":[],"servers":[],"ram":[],"dates":[]};
         'url': "https://api.minehut.com/network/players/distribution",
         'cache': false,
         'success': function (data) {
-            tmp = data;
+          tmp = data;
         }
-    });
-    return tmp;
-};
-        function returnStats() {
-    var tmp = null;
-    $.ajax({
+      });
+      return tmp;
+    };
+    function returnStats() {
+      var tmp = null;
+      $.ajax({
         'async': false,
         'type': "GET",
         'timeout': 9999,
@@ -111,119 +114,123 @@ mdata = {"players":[],"servers":[],"ram":[],"dates":[]};
         'url': "https://api.minehut.com/network/simple_stats",
         'cache': false,
         'success': function (data) {
-            tmp = data;
+          tmp = data;
         }
-    });
-    return tmp;
-};
-let jd = returnStats();
-const ctx = document.getElementById('graph');
-cc = new Chart(ctx, {
-    type: 'line',
-    data: {
+      });
+      return tmp;
+    };
+    let jd = returnStats();
+    const ctx = document.getElementById('graph');
+    cc = new Chart(ctx, {
+      type: 'line',
+      data: {
         labels: mdata.dates,
         datasets: [
           {
-            label:["Server Count"],
+            label: ["Server Count"],
             data: mdata.servers,
-           
+
           },
           {
-            label:["GB of RAM"],
+            label: ["GB of RAM"],
             data: mdata.ram,
-           
+
           },
           {
-            label:["Players / 2"],
+            label: ["Players / 2"],
             data: mdata.players,
-           
+
           }
         ]
       },
-    options: {
-     innerWidth: 360,
-     innerHeight:200
+      options: {
+        innerWidth: 360,
+        innerHeight: 200
+      }
+    });
+    cc.options.elements.line.tension = 0.4;
+
+
+    /* Update Counters */
+    function playerupdate() {
+      dist = returnPlayerStats()
+      let bedrock = dist.bedrockTotal
+      let java = dist.javaTotal
+      let jelobby = dist.javaLobby
+      let belobby = dist.bedrockLobby
+      let jesrv = dist.javaPlayerServer
+      let besrv = dist.bedrockPlayerServer
+      document.getElementById('je').innerText = `Total: ${java}`;
+      document.getElementById('be').innerText = `Total: ${bedrock}`;
+      document.getElementById('jelobby').innerText = `In Lobby: ${jelobby}`;
+      document.getElementById('belobby').innerText = `In Lobby: ${belobby}`;
+      document.getElementById('jeserver').innerText = `In Server: ${jesrv}`;
+      document.getElementById('beserver').innerText = `In Server: ${besrv}`;
     }
-  }); 
-  cc.options.elements.line.tension = 0.4;
-       
- 
-/* Update Counters */
-function playerupdate() {
-    dist = returnPlayerStats()
-    let bedrock = dist.bedrockTotal
-    let java = dist.javaTotal
-    let jelobby = dist.javaLobby
-    let belobby = dist.bedrockLobby
-    let jesrv = dist.javaPlayerServer
-    let besrv = dist.bedrockPlayerServer
-    document.getElementById('je').innerText = `Total: ${java}`;
-    document.getElementById('be').innerText = `Total: ${bedrock}`;
-    document.getElementById('jelobby').innerText = `In Lobby: ${jelobby}`;
-    document.getElementById('belobby').innerText = `In Lobby: ${belobby}`;
-    document.getElementById('jeserver').innerText = `In Server: ${jesrv}`;
-    document.getElementById('beserver').innerText = `In Server: ${besrv}`;
-}
-function statupdate() {
-    
-    jd = returnStats();
+    function statupdate() {
 
-    let servers = jd.server_count;
-let servermax = jd.server_max;
-let plr = jd.player_count;
-let ram = Math.floor(jd.ram_count/1024);
-let rammax = Math.floor(jd.ram_max);
-let date = new Date().toJSON();
-if (jd.ok == "false") {document.getElementById('srv').innerText = `Servers: N/A`;
-document.getElementById('plr').innerText = `Players: N/A`;
-document.getElementById('mem').innerText = `RAM: N/A`;} else {
-    document.getElementById('srv').innerText = `Servers: ${servers}/${servermax} (${Math.floor((servers/servermax)*100)}%)`;
-document.getElementById('plr').innerText = `Players: ${plr}`;
-document.getElementById('mem').innerText = `RAM: ${ram}GB/${rammax}GB (${Math.floor((ram/rammax)*100)}%)`;}
-document.getElementById('date').innerText = `Date Pinged: ${date}`;
-mdata.servers.push(servers)
-mdata.players.push(plr/2.25)
-mdata.ram.push(ram/1.545)
-mdata.dates.push(" ")
+      jd = returnStats();
+
+      let servers = jd.server_count;
+      let servermax = jd.server_max;
+      let plr = jd.player_count;
+      let ram = Math.floor(jd.ram_count / 1024);
+      let rammax = Math.floor(jd.ram_max);
+      let date = new Date().toJSON();
+      if (jd.ok == "false") {
+        document.getElementById('srv').innerText = `Servers: N/A`;
+        document.getElementById('plr').innerText = `Players: N/A`;
+        document.getElementById('mem').innerText = `RAM: N/A`;
+      } else {
+        document.getElementById('srv').innerText = `Servers: ${servers}/${servermax} (${Math.floor((servers / servermax) * 100)}%)`;
+        document.getElementById('plr').innerText = `Players: ${plr}`;
+        document.getElementById('mem').innerText = `RAM: ${ram}GB/${rammax}GB (${Math.floor((ram / rammax) * 100)}%)`;
+      }
+      document.getElementById('date').innerText = `Date Pinged: ${date}`;
+      mdata.servers.push(servers)
+      mdata.players.push(plr / 2.25)
+      mdata.ram.push(ram / 1.545)
+      mdata.dates.push(" ")
 
 
-cc.data.datasets[0].data = mdata.servers ;
-cc.data.datasets[1].data = mdata.ram;
-cc.data.datasets[2].data = mdata.players;
-cc.update()
-}
+      cc.data.datasets[0].data = mdata.servers;
+      cc.data.datasets[1].data = mdata.ram;
+      cc.data.datasets[2].data = mdata.players;
+      cc.update()
+    }
 
-pd = returnPastData()
-      console.log(pd.date)
-for (let i = pd.date.length; i > 1 ; i--) {
-  mdata.servers.push(pd.servers[i])
-mdata.players.push(pd.players[i]/2.25)  
-mdata.ram.push((pd.ram[i]/1024)/1.545) 
-mdata.dates.push(pd.date[i])
-}
+    pd = returnPastData()
+    console.log(pd.date)
+    for (let i = pd.date.length; i > 1; i--) {
+      mdata.servers.push(pd.servers[i])
+      mdata.players.push(pd.players[i] / 2.25)
+      mdata.ram.push((pd.ram[i] / 1024) / 1.545)
+      mdata.dates.push(pd.date[i])
+    }
 
 
-statupdate();
-playerupdate();
-setInterval(function() {statupdate(); console.log(mdata);},5000)
-setInterval(function() {playerupdate(); console.log(mdata);},15000)
-setInterval(function() {
-    let date = new Date().toLocaleString("en-US", { timeZone: "America/New_York" });
-    
-    document.getElementById('est').innerText = "Time in EST: " + date;
-    date = new Date(date);
-    let hour = date.getHours() + 1
-    if (hour > 12 && hour < 16) {
+    statupdate();
+    playerupdate();
+    setInterval(function () {statupdate(); console.log(mdata);}, 5000)
+    setInterval(function () {playerupdate(); console.log(mdata);}, 15000)
+    setInterval(function () {
+      let date = new Date().toLocaleString("en-US", {timeZone: "America/New_York"});
+
+      document.getElementById('est').innerText = "Time in EST: " + date;
+      date = new Date(date);
+      let hour = date.getHours() + 1
+      if (hour > 12 && hour < 16) {
         document.getElementById("ph").innerText = "Currently in peak hours: yes"
-    } else {
+      } else {
         document.getElementById("ph").innerText = "Currently in peak hours: no"
-    }
-},1000)
+      }
+    }, 1000)
 
-    </script>
-     <!-- CSS -->
+  </script>
+  <!-- CSS -->
 
-    <link rel="stylesheet" href="index.css">
-    
+  <link rel="stylesheet" href="index.css">
+
 </body>
+
 </html>
